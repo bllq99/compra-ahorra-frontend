@@ -3,7 +3,7 @@ import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../footer/footer.component';
-import DashboardComponent from '../../../business/dashboard/dashboard.component';
+import DashboardComponent from "../../../business/dashboard/dashboard.component";
 
 @Component({
   selector: 'app-layout',

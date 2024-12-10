@@ -5,11 +5,12 @@ import { Producto } from '../../core/models/producto';
 import { Carrito } from '../../core/models/carrito';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
@@ -18,30 +19,47 @@ export default class ProductsComponent implements OnInit {
   private cartService = inject(CartService);
   private productService = inject(ProductService);
   listCarrito: Carrito[] = [];
+  isAuthenticated: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.isAuthenticated = this.authService.isAuthenticated();
+  }
 
   ngOnInit(): void {
+    this.loadProducts();
+    this.listCarrito = this.cartService.getCarrito();
+  }
+
+  private loadProducts(): void {
     this.productService.getProducts().subscribe({
       next: (data) => {
         this.productos = data;
       },
       error: (err) => {
         console.error('Error al obtener productos:', err);
+        if (err.status === 401) {
+          this.isAuthenticated = false;
+        }
       }
     });
   }
 
   agregarProducto(item: Producto) {
+    if (!this.isAuthenticated) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.cartService.agregar(item);
-    console.log("Producto agregado al carrito");
-    console.log(item);
     this.listCarrito = this.cartService.getCarrito();
-    console.log(this.listCarrito);
   }
 
   logout(): void {
     this.authService.logout();
+    this.isAuthenticated = false;
+  }
+
+  login(): void {
+    this.router.navigate(['/login']);
   }
 
   getTotalProductos(): number {

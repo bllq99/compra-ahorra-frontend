@@ -36,7 +36,10 @@ export default class CarritoListarComponent {
     const index = this.listCarrito.findIndex(
       i => i.producto.product_id === item.producto.product_id
     );
-    this.listCarrito.splice(index, 1);
+    if (index !== -1) {
+      this.cartService.eliminarProducto(index);
+      this.listCarrito = this.cartService.getCarrito();
+    }
   }
 
   calcularSubtotal(): number {

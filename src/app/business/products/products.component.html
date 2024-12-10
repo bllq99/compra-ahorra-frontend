@@ -30,26 +30,29 @@
                             </svg>
                         </div>
 
-                        <a routerLink="/carrito" class="group flex items-center p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <div class="relative">
-                                <svg class="h-7 w-7 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                </svg>
-                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                    {{getTotalProductos()}}
-                                </span>
-                            </div>
-                            <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-indigo-600">Carrito</span>
-                        </a>
-
-                        <!-- Nuevo botón de logout -->
-                        <button (click)="logout()" 
-                                class="group flex items-center p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <svg class="h-7 w-7 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                            </svg>
-                            <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-indigo-600">Salir</span>
-                        </button>
+                        @if (isAuthenticated) {
+                            <a routerLink="/carrito" class="group flex items-center p-2 hover:bg-gray-100 rounded-full transition-colors">
+                                <div class="relative">
+                                    <svg class="h-7 w-7 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                    </svg>
+                                    @if (getTotalProductos() > 0) {
+                                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                            {{ getTotalProductos() }}
+                                        </span>
+                                    }
+                                </div>
+                            </a>
+                            <button (click)="logout()" 
+                                    class="text-gray-600 hover:text-gray-800 px-4 py-2 rounded-md">
+                                Cerrar Sesión
+                            </button>
+                        } @else {
+                            <button (click)="login()" 
+                                    class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                                Iniciar Sesión
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
@@ -64,26 +67,29 @@
         </h2>
 
         <div class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            @for(product of productos; track product.product_id) {
-            <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-4">
-                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg mb-4">
-                    <img [src]="product.image_url" 
-                         [alt]="product.name"
+            @for(producto of productos; track producto.product_id) {
+            <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+                <!-- Imagen del producto -->
+                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg">
+                    <img [src]="producto.image_url" 
+                         [alt]="producto.name"
                          class="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300">
                 </div>
-                <div class="space-y-2">
-                    <h3 class="text-lg font-semibold text-gray-900">{{ product.name }}</h3>
-                    <p class="text-sm text-gray-500">{{ product.category }}</p>
-                    <div class="flex justify-between items-center">
-                        <p class="text-xl font-bold text-indigo-600">${{ product.price }}</p>
-                        <button (click)="agregarProducto(product)" 
-                                class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            <span>Agregar</span>
-                        </button>
-                    </div>
+                
+                <!-- Información del producto -->
+                <div class="mt-6 flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ producto.name }}</h3>
+                    <p class="text-sm text-gray-500 mb-4">{{ producto.category }}</p>
+                    
+                    <!-- Precio -->
+                    <p class="text-2xl font-bold text-indigo-600 mb-4">${{ producto.price }}</p>
+                    
+                    <!-- Botón -->
+                    <button (click)="agregarProducto(producto)"
+                            [class]="isAuthenticated ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400'"
+                            class="w-full text-white px-4 py-3 rounded-lg transition-colors duration-200 ease-in-out">
+                        {{ isAuthenticated ? 'Agregar al Carrito' : 'Iniciar Sesión para Comprar' }}
+                    </button>
                 </div>
             </div>
             } @empty {

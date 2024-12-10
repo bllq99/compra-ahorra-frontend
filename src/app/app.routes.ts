@@ -19,11 +19,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./business/tables/tables.component'),
 
             },
-            {
-                path: '',
-                loadComponent: () => import('./business/dashboard/dashboard.component'),
-
-            }
         ]
     },
     {

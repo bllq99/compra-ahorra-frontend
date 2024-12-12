@@ -70,7 +70,7 @@
 
         <div class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             @for(producto of productos; track producto.product_id) {
-            <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6">
+            <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col h-full">
                 <!-- Imagen del producto -->
                 <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg">
                     <img [src]="producto.image_url" 
@@ -79,17 +79,17 @@
                 </div>
                 
                 <!-- Información del producto -->
-                <div class="mt-6 flex flex-col">
+                <div class="mt-6 flex flex-col flex-grow">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ producto.name }}</h3>
                     <p class="text-sm text-gray-500 mb-4">{{ producto.category }}</p>
                     
                     <!-- Precio -->
                     <p class="text-2xl font-bold text-indigo-600 mb-4">${{ producto.price | number:'1.0-0' }}</p>
                     
-                    <!-- Botón -->
+                    <!-- Botón - ahora con mt-auto para empujarlo al final -->
                     <button (click)="agregarProducto(producto)"
                             [class]="isAuthenticated ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400'"
-                            class="w-full text-white px-4 py-3 rounded-lg transition-colors duration-200 ease-in-out">
+                            class="w-full text-white px-4 py-3 rounded-lg transition-colors duration-200 ease-in-out mt-auto">
                         {{ isAuthenticated ? 'Agregar al Carrito' : 'Iniciar Sesión para Comprar' }}
                     </button>
                 </div>
